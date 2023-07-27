@@ -1,4 +1,5 @@
 import {PrismaClient} from "@prisma/client";
+import {UserFilter} from "./types";
 
 const prisma = new PrismaClient().user;
 

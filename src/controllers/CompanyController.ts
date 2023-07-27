@@ -1,8 +1,7 @@
 import {Request, Response} from "express";
-import {PrismaClient} from "@prisma/client";
 import {ERRORS} from "../constants";
-
-const prisma = new PrismaClient();
+import userRepository from "../repositories/user.repository";
+import companyRepository from "../repositories/company.repository";
 
 class CompanyController {
   /**
@@ -13,20 +12,7 @@ class CompanyController {
       req.body;
 
     // Get user using auth email
-    const user = await prisma.user.findUnique({
-      where: {email: userEmail},
-      include: {
-        company: true,
-      },
-    });
-
-    // Check if user with email exists
-    if (!user || user === null) {
-      return res.status(500).json({
-        status: false,
-        message: ERRORS.GENERIC,
-      });
-    }
+    const user = await userRepository.read({email: userEmail});
 
     // Check if user has created a company in the past
     if (user.company) {
@@ -38,14 +24,12 @@ class CompanyController {
 
     // Create company
     try {
-      await prisma.company.create({
-        data: {
-          name,
-          numberOfProducts,
-          numberOfUsers,
-          percentage,
-          userId: user.id,
-        },
+      await companyRepository.create({
+        name,
+        numberOfProducts,
+        numberOfUsers,
+        percentage,
+        userId: user.id,
       });
 
       return res
@@ -60,6 +44,10 @@ class CompanyController {
       });
     }
   };
+
+  /**
+   *
+   */
 }
 
 export default CompanyController;

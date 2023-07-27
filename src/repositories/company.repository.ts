@@ -1,11 +1,12 @@
-import {Company, PrismaClient} from "@prisma/client";
+import {PrismaClient} from "@prisma/client";
+import {CompanyCreate} from "./types";
 
 const prisma = new PrismaClient().company;
 
 /**
  * Create company
  */
-const create = async (data: Company) => {
+const create = async (data: CompanyCreate) => {
   return await prisma.create({data});
 };
 
