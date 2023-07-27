@@ -9,10 +9,11 @@ dotenv.config();
 const app: Express = express();
 
 app.use(bodyParser.json());
-app.use(errors());
 
 // Set app router
 app.use(router);
+
+app.use(errors());
 
 // Start Server
 const port = process.env.PORT || 4000;
