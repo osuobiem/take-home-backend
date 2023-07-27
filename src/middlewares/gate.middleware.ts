@@ -2,7 +2,11 @@ import {NextFunction, Request, Response} from "express";
 import {ERRORS} from "../constants";
 import userRepository from "../repositories/user.repository";
 import {PERMISSIONS} from "../enums";
+import companyRepository from "../repositories/company.repository";
 
+/**
+ * Check user permissions
+ */
 export const hasPermission = async (
   req: Request,
   res: Response,
@@ -43,4 +47,28 @@ export const hasPermission = async (
       message: ERRORS.GENERIC,
     });
   }
+};
+
+/**
+ * Check if company in request exists
+ */
+export const checkCompany = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const {id} = req.params;
+
+  // Get company
+  const company = await companyRepository.read(id);
+
+  if (!company || company === null) {
+    return res.status(400).json({
+      status: false,
+      message: ERRORS.NOT_FOUND,
+    });
+  }
+
+  next();
+  return;
 };

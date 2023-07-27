@@ -1,20 +1,22 @@
-import {NextFunction, Request, Response, Router} from "express";
+import {Router} from "express";
 import CompanyController from "./controllers/CompanyController";
 import {verifyAuthToken} from "./middlewares/auth.middleware";
 import companyValidator from "./validators/company.validator";
-import {hasPermission} from "./middlewares/gate.middleware";
+import {checkCompany, hasPermission} from "./middlewares/gate.middleware";
 import {PERMISSIONS} from "./enums";
 import UserController from "./controllers/UserController";
+import {uploadFile} from "./utils";
 
 const router = Router();
+
+const uploadLogoImage = uploadFile.single("logo");
 
 // Create company
 router.post(
   "/company",
   verifyAuthToken,
   companyValidator.create,
-  (req: Request, res: Response, next: NextFunction) =>
-    hasPermission(req, res, next, PERMISSIONS.CREATE_COMPANY),
+  (req, res, next) => hasPermission(req, res, next, PERMISSIONS.CREATE_COMPANY),
   CompanyController.create
 );
 
@@ -23,8 +25,7 @@ router.put(
   "/company/:id",
   verifyAuthToken,
   companyValidator.update,
-  (req: Request, res: Response, next: NextFunction) =>
-    hasPermission(req, res, next, PERMISSIONS.UPDATE_COMPANY),
+  (req, res, next) => hasPermission(req, res, next, PERMISSIONS.UPDATE_COMPANY),
   CompanyController.update
 );
 
@@ -32,17 +33,30 @@ router.put(
 router.get(
   "/company/:id",
   verifyAuthToken,
-  (req: Request, res: Response, next: NextFunction) =>
-    hasPermission(req, res, next, PERMISSIONS.VIEW_COMPANY),
+  (req, res, next) => hasPermission(req, res, next, PERMISSIONS.VIEW_COMPANY),
   CompanyController.read
+);
+
+// Update company logo
+router.patch(
+  "/company/:id",
+  verifyAuthToken,
+  companyValidator.updateLogo,
+  (req, res, next) =>
+    hasPermission(req, res, next, PERMISSIONS.UPDATE_COMPANY_LOGO),
+  checkCompany,
+  (req, res) => {
+    uploadLogoImage(req, res, (err) => {
+      CompanyController.updateLogo(req, res, err);
+    });
+  }
 );
 
 // Get users
 router.get(
   "/user",
   verifyAuthToken,
-  (req: Request, res: Response, next: NextFunction) =>
-    hasPermission(req, res, next, PERMISSIONS.VIEW_USERS),
+  (req, res, next) => hasPermission(req, res, next, PERMISSIONS.VIEW_USERS),
   UserController.readMany
 );
 

@@ -1,7 +1,9 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import {ERRORS} from "../constants";
 import userRepository from "../repositories/user.repository";
 import companyRepository from "../repositories/company.repository";
+import {uploadFile} from "../utils";
+import {unlinkSync} from "fs";
 
 class CompanyController {
   /**
@@ -66,7 +68,7 @@ class CompanyController {
 
       return res.json({status: true, message: "Company updated successfully"});
     } catch (error: any) {
-      console.error("Error creating company:", error.message);
+      console.error("Error updating company:", error.message);
 
       return res.status(500).json({
         status: false,
@@ -92,6 +94,50 @@ class CompanyController {
     }
 
     return res.json(company);
+  };
+
+  /**
+   * Update company logo
+   */
+  public static updateLogo = async (req: Request, res: Response, err: any) => {
+    const {id} = req.params;
+    const company = await companyRepository.read(id);
+
+    // Check if an error occurred or if file does not exist
+    if (err || !req.file || !company || company === null) {
+      return res.status(400).json({
+        status: false,
+        message: err?.message
+          ? `Error updating logo: ${err.message}`
+          : ERRORS.GENERIC,
+      });
+    } else {
+      const fileName = req.file.filename;
+
+      const oldLogo = company.logo;
+
+      // Update company logo field
+      try {
+        await companyRepository.update(id, {...company, logo: fileName});
+
+        // Delete old company logo file
+        if (oldLogo && oldLogo !== null) {
+          unlinkSync(`./public/uploads/${oldLogo}`);
+        }
+
+        return res.json({
+          status: true,
+          message: "Company logo updated successfully",
+        });
+      } catch (error: any) {
+        console.error("Error updating company logo:", error.message);
+
+        return res.status(500).json({
+          status: false,
+          message: ERRORS.GENERIC,
+        });
+      }
+    }
   };
 }
 
