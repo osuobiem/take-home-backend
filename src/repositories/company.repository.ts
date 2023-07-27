@@ -13,20 +13,17 @@ const create = async (data: CompanyCreateOrUpdate) => {
 /**
  * Get company
  */
-const read = async (id: number) => {
+const read = async (id: string) => {
   return await prisma.findUniqueOrThrow({
-    where: {id},
-    include: {
-      user: true,
-    },
+    where: {id: parseInt(id)},
   });
 };
 
 /**
  * Update company
  */
-const update = async (id: number, data: CompanyCreateOrUpdate) => {
-  return await prisma.update({where: {id}, data});
+const update = async (id: string, data: CompanyCreateOrUpdate) => {
+  return await prisma.update({where: {id: parseInt(id)}, data});
 };
 
 export default {

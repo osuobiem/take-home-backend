@@ -46,8 +46,37 @@ class CompanyController {
   };
 
   /**
-   *
+   * Update company information
    */
+  public static update = async (req: Request, res: Response) => {
+    const {userEmail} = req.body;
+    const {id} = req.params;
+
+    // Get user using auth email
+    await userRepository.read({email: userEmail});
+
+    // Get company
+    const company = await companyRepository.read(id);
+
+    // Update company
+    try {
+      const data = {...req.body};
+      delete data.userEmail;
+
+      await companyRepository.update(id, {...company, ...data});
+
+      return res
+        .status(200)
+        .json({status: true, message: "Company updated successfully"});
+    } catch (error: any) {
+      console.error("Error creating company:", error.message);
+
+      return res.status(500).json({
+        status: false,
+        message: ERRORS.GENERIC,
+      });
+    }
+  };
 }
 
 export default CompanyController;

@@ -13,4 +13,12 @@ router.post(
   CompanyController.create
 );
 
+// Update company information
+router.put(
+  "/company/:id",
+  verifyAuthToken,
+  companyValidator.update,
+  CompanyController.update
+);
+
 export default router;
