@@ -4,6 +4,7 @@ import {verifyAuthToken} from "./middlewares/auth.middleware";
 import companyValidator from "./validators/company.validator";
 import {hasPermission} from "./middlewares/gate.middleware";
 import {PERMISSIONS} from "./enums";
+import UserController from "./controllers/UserController";
 
 const router = Router();
 
@@ -34,6 +35,15 @@ router.get(
   (req: Request, res: Response, next: NextFunction) =>
     hasPermission(req, res, next, PERMISSIONS.VIEW_COMPANY),
   CompanyController.read
+);
+
+// Get users
+router.get(
+  "/user",
+  verifyAuthToken,
+  (req: Request, res: Response, next: NextFunction) =>
+    hasPermission(req, res, next, PERMISSIONS.VIEW_USERS),
+  UserController.readMany
 );
 
 export default router;

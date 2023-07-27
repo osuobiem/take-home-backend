@@ -64,9 +64,7 @@ class CompanyController {
 
       await companyRepository.update(id, {...company, ...data});
 
-      return res
-        .status(200)
-        .json({status: true, message: "Company updated successfully"});
+      return res.json({status: true, message: "Company updated successfully"});
     } catch (error: any) {
       console.error("Error creating company:", error.message);
 
@@ -93,7 +91,7 @@ class CompanyController {
       });
     }
 
-    return res.status(200).json(company);
+    return res.json(company);
   };
 }
 

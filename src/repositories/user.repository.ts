@@ -16,6 +16,19 @@ const read = async (filter: UserFilter) => {
   });
 };
 
+/**
+ * Get users
+ */
+const readMany = async () => {
+  return await prisma.findMany({
+    include: {
+      company: true,
+      role: true,
+    },
+  });
+};
+
 export default {
   read,
+  readMany,
 };
