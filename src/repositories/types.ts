@@ -8,4 +8,4 @@ export type UserFilter =
       id: number;
     };
 
-export type CompanyCreate = Omit<Company, "id" | "logo">;
+export type CompanyCreateOrUpdate = Omit<Company, "id" | "logo">;
