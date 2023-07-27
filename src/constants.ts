@@ -3,4 +3,5 @@ export const ERRORS = {
   AUTH_TOKEN_REQUIRED: "Auth token required",
   INVALID_AUTH_TOKEN: "Invalid auth token",
   ACTION_NOT_ALLOWED: "Action not allowed",
+  NOT_FOUND: "The requested resource does not exist",
 };

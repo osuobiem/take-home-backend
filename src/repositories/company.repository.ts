@@ -14,7 +14,7 @@ const create = async (data: CompanyCreateOrUpdate) => {
  * Get company
  */
 const read = async (id: string) => {
-  return await prisma.findUniqueOrThrow({
+  return await prisma.findUnique({
     where: {id: parseInt(id)},
   });
 };

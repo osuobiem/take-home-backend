@@ -7,10 +7,10 @@ const roles: Role[] = [
     name: "User",
     description:
       "Can create, modify, and view own company data except for company logo",
-    roles: [
-      PERMISSIONS.CREATE_COMPANY.toString(),
-      PERMISSIONS.UPDATE_COMPANY.toString(),
-      PERMISSIONS.VIEW_COMPANY.toString(),
+    permissions: [
+      PERMISSIONS.CREATE_COMPANY,
+      PERMISSIONS.UPDATE_COMPANY,
+      PERMISSIONS.VIEW_COMPANY,
     ],
   },
   {
@@ -18,10 +18,10 @@ const roles: Role[] = [
     name: "Admin",
     description:
       "Can view users, modify companies logos, and compare companies",
-    roles: [
-      PERMISSIONS.UPDATE_COMPANY_LOGO.toString(),
-      PERMISSIONS.VIEW_USERS.toString(),
-      PERMISSIONS.COMPARE_COMPANIES.toString(),
+    permissions: [
+      PERMISSIONS.UPDATE_COMPANY_LOGO,
+      PERMISSIONS.VIEW_USERS,
+      PERMISSIONS.COMPARE_COMPANIES,
     ],
   },
 ];

@@ -8,15 +8,11 @@ class CompanyController {
    * Create a new company
    */
   public static create = async (req: Request, res: Response) => {
-    const {userEmail, name, numberOfUsers, numberOfProducts, percentage} =
-      req.body;
-
-    // Get user using auth email
-    const user = await userRepository.read({email: userEmail});
+    const {user, name, numberOfUsers, numberOfProducts, percentage} = req.body;
 
     // Check if user has created a company in the past
     if (user.company) {
-      return res.status(400).json({
+      return res.status(403).json({
         status: false,
         message: `${ERRORS.ACTION_NOT_ALLOWED}: You've already created a company`,
       });
@@ -49,19 +45,22 @@ class CompanyController {
    * Update company information
    */
   public static update = async (req: Request, res: Response) => {
-    const {userEmail} = req.body;
     const {id} = req.params;
-
-    // Get user using auth email
-    await userRepository.read({email: userEmail});
 
     // Get company
     const company = await companyRepository.read(id);
 
+    if (!company || company === null) {
+      return res.status(400).json({
+        status: false,
+        message: ERRORS.NOT_FOUND,
+      });
+    }
+
     // Update company
     try {
       const data = {...req.body};
-      delete data.userEmail;
+      delete data.user;
 
       await companyRepository.update(id, {...company, ...data});
 
