@@ -37,6 +37,14 @@ router.get(
   CompanyController.read
 );
 
+// Get companies
+router.get(
+  "/company",
+  verifyAuthToken,
+  (req, res, next) => hasPermission(req, res, next, PERMISSIONS.VIEW_USERS),
+  CompanyController.readMany
+);
+
 // Update company logo
 router.patch(
   "/company/:id",

@@ -26,8 +26,20 @@ const update = async (id: string, data: CompanyCreateOrUpdate) => {
   return await prisma.update({where: {id: parseInt(id)}, data});
 };
 
+/**
+ * Get companies
+ */
+const readMany = async () => {
+  return await prisma.findMany({
+    include: {
+      user: true,
+    },
+  });
+};
+
 export default {
   create,
   read,
   update,
+  readMany,
 };

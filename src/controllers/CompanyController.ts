@@ -139,6 +139,15 @@ class CompanyController {
       }
     }
   };
+
+  /**
+   * Get companies
+   */
+  public static readMany = async (req: Request, res: Response) => {
+    const companies = await companyRepository.readMany();
+
+    return res.json(companies);
+  };
 }
 
 export default CompanyController;
