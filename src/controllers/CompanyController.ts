@@ -76,6 +76,25 @@ class CompanyController {
       });
     }
   };
+
+  /**
+   * Get company
+   */
+  public static read = async (req: Request, res: Response) => {
+    const {id} = req.params;
+
+    // Get company
+    const company = await companyRepository.read(id);
+
+    if (!company || company === null) {
+      return res.status(400).json({
+        status: false,
+        message: ERRORS.NOT_FOUND,
+      });
+    }
+
+    return res.status(200).json(company);
+  };
 }
 
 export default CompanyController;

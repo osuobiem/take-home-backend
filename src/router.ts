@@ -27,4 +27,13 @@ router.put(
   CompanyController.update
 );
 
+// Get company
+router.get(
+  "/company/:id",
+  verifyAuthToken,
+  (req: Request, res: Response, next: NextFunction) =>
+    hasPermission(req, res, next, PERMISSIONS.VIEW_COMPANY),
+  CompanyController.read
+);
+
 export default router;
