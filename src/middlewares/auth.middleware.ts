@@ -24,6 +24,8 @@ export const verifyAuthToken = async (
       message: "Invalid auth token",
     });
 
+  req.body.authData = verify.data;
+
   next();
   return;
 };

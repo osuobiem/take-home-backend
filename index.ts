@@ -1,8 +1,8 @@
 import express, {Express} from "express";
 import dotenv from "dotenv";
-import routes from "./src/routes";
 import bodyParser from "body-parser";
 import {errors} from "celebrate";
+import router from "./src/router";
 
 dotenv.config();
 
@@ -11,8 +11,8 @@ const app: Express = express();
 app.use(bodyParser.json());
 app.use(errors());
 
-// Set routes
-routes.forEach((route) => app[route.method](route.path, route.handler));
+// Set app router
+app.use(router);
 
 // Start Server
 const port = process.env.PORT || 4000;
