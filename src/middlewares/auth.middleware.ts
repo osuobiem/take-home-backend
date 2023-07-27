@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {verifyToken} from "../services/auth.service";
+import {ERRORS} from "../constants";
 
 export const verifyAuthToken = async (
   req: Request,
@@ -12,19 +13,19 @@ export const verifyAuthToken = async (
   if (!authorization)
     return res.status(499).json({
       status: false,
-      message: "Auth token required",
+      message: ERRORS.AUTH_TOKEN_REQUIRED,
     });
 
   // Verify the token
   const verify = await verifyToken(authorization);
 
-  if (!verify.status)
+  if (!verify.status || !verify.data)
     return res.status(401).json({
       status: false,
-      message: "Invalid auth token",
+      message: ERRORS.INVALID_AUTH_TOKEN,
     });
 
-  req.body.authData = verify.data;
+  req.body.userEmail = verify.data.email;
 
   next();
   return;
