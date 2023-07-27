@@ -1,5 +1,6 @@
 import * as admin from "firebase-admin";
-import serviceAccount from "./service-account.json";
+
+const serviceAccount = require(`${process.env.SERVICE_ACCOUNT_FILE_PATH}service-account.json`);
 
 // Initialize Firebase Admin SDK with service account credentials
 
